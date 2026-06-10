@@ -7,7 +7,8 @@ O **VagaBot** é uma aplicação web full-stack desenvolvida como atividade acad
 * **Backend:** Python com Flask (API REST) e Flask-CORS.
 * **Frontend:** HTML5, CSS3 e JavaScript (Vanilla), consumindo a API nativamente via `fetch`.
 * **Banco de Dados:** MongoDB (NoSQL) integrado via `pymongo`.
-* **Automação (RPA):** * `selenium` (controlando o **Firefox** para o WhatsApp Web).
+* **Automação (RPA):**
+  * `selenium` (controlando o **Firefox** para o WhatsApp Web).
   * `smtplib` nativo do Python para disparos de e-mail via SMTP do Gmail.
 * **Chatbot:** Integrado na interface e processado via backend com reconhecimento de intenções.
 
@@ -25,8 +26,8 @@ Certifique-se de ter instalado em sua máquina:
 Abra o terminal na pasta raiz do projeto e instale as bibliotecas Python necessárias executando:
 ```bash
 pip install flask pymongo flask-cors selenium
-
-3. Configuração do Robô (RPA)
+```
+### 3. Configuração do Robô (RPA)
 
 Antes de executar o projeto para apresentação, é necessário configurar as credenciais de teste:
 
@@ -58,3 +59,4 @@ Antes de executar o projeto para apresentação, é necessário configurar as cr
         Converse com o Chatbot no canto inferior da tela.
 
         Clique no botão "Disparar Alertas (RPA)" na vaga criada para acionar a automação do Firefox e do Gmail.
+
