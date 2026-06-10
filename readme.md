@@ -31,32 +31,29 @@ pip install flask pymongo flask-cors selenium
 
 Antes de executar o projeto para apresentação, é necessário configurar as credenciais de teste:
 
-    Abra o arquivo rpa.py.
+Abra o arquivo rpa.py.
 
-    Na função enviar_email(), substitua EMAIL_ORIGEM pelo seu e-mail do Gmail e insira sua Senha de Aplicativo (gerada nas configurações de segurança do Google).
+Na função enviar_email(), substitua EMAIL_ORIGEM pelo seu e-mail do Gmail e insira sua Senha de Aplicativo (gerada nas configurações de segurança do Google).
 
-    Abra o arquivo app.py.
+Abra o arquivo app.py.
 
-    Na rota @app.route('/api/notificar/<id_vaga>'), preencha as variáveis EMAIL_TESTE e WHATSAPP_TESTE com o e-mail e o número de telefone (com DDD) que receberão as notificações ao vivo durante a apresentação.
+Na rota @app.route('/api/notificar/<id_vaga>'), preencha as variáveis EMAIL_TESTE e WHATSAPP_TESTE com o e-mail e o número de telefone (com DDD) que receberão as notificações ao vivo durante a apresentação.
 
-4. Executando a Aplicação
+### 4. Executando a Aplicação
 
-    Inicie o Banco de Dados: Garanta que o serviço do MongoDB está ativo (net start MongoDB no Windows ou via interface do MongoDB Compass).
+Inicie o Banco de Dados: Garanta que o serviço do MongoDB está ativo (net start MongoDB no Windows ou via interface do MongoDB Compass).
 
-    Inicie o Servidor Backend: No terminal, dentro da pasta do projeto, execute:
-    Bash
+Inicie o Servidor Backend: No terminal, dentro da pasta do projeto, execute:
+```bash
+python app.py
+```
+O terminal exibirá que a API está rodando em http://127.0.0.1:5000.
 
-    python app.py
+Abra o Frontend: Dê um duplo clique no arquivo index.html para abri-lo no seu navegador.
 
-    O terminal exibirá que a API está rodando em http://127.0.0.1:5000.
-
-    Abra o Frontend: Dê um duplo clique no arquivo index.html para abri-lo no seu navegador.
-
-    Testando: * Cadastre uma vaga pelo formulário.
-
-        Filtre as vagas utilizando os campos de busca.
-
-        Converse com o Chatbot no canto inferior da tela.
-
-        Clique no botão "Disparar Alertas (RPA)" na vaga criada para acionar a automação do Firefox e do Gmail.
+Testando:
+ * Cadastre uma vaga pelo formulário.
+ * Filtre as vagas utilizando os campos de busca.
+ * Converse com o Chatbot no canto inferior da tela.
+ * Clique no botão "Disparar Alertas (RPA)" na vaga criada para acionar a automação do Firefox e do Gmail.
 
