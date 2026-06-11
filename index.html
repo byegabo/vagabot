@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VagaBot - Painel Inteligente</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>VagaBot - Painel Avançado</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,25 +12,36 @@
     <h1>Vaga<span>Bot</span></h1>
 
     <div class="container">
-        <div class="box">
-            <h2>Nova Vaga</h2>
-            <form id="formVaga">
-                <input type="text" id="titulo" placeholder="Título da Vaga (ex: Desenvolvedor Python)" required>
-                <input type="text" id="descricao" placeholder="Descrição rápida sobre a oportunidade" required>
-                
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" id="area" placeholder="Área (ex: Tecnologia)" required>
-                    <input type="number" id="salario" placeholder="Salário (R$)" required>
-                </div>
+        <div class="box" style="display: flex; flex-direction: column; gap: 25px;">
+            <div>
+                <h2>Cadastrar Nova Vaga</h2>
+                <form id="formVaga">
+                    <input type="text" id="titulo" placeholder="Título da Vaga" required>
+                    <input type="text" id="descricao" placeholder="Descrição rápida" required>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="area" placeholder="Área (ex: Tecnologia)" required>
+                        <input type="number" id="salario" placeholder="Salário (R$)" required>
+                    </div>
+                    <select id="modalidade" required>
+                        <option value="" disabled selected>Selecione a Modalidade...</option>
+                        <option value="Remoto">Remoto</option>
+                        <option value="Hibrido">Híbrido</option>
+                        <option value="Presencial">Presencial</option>
+                    </select>
+                    <button type="submit" class="btn-salvar">Salvar Vaga no Banco</button>
+                </form>
+            </div>
 
-                <select id="modalidade" required>
-                    <option value="" disabled selected>Selecione a Modalidade...</option>
-                    <option value="Remoto">Remoto</option>
-                    <option value="Hibrido">Híbrido</option>
-                    <option value="Presencial">Presencial</option>
-                </select>
-                <button type="submit" class="btn-salvar">Salvar no Banco de Dados</button>
-            </form>
+            <div style="border-top: 2px solid rgba(255,255,255,0.4); padding-top: 20px;">
+                <h2>Cadastrar Destinatário (Banco)</h2>
+                <form id="formCandidato">
+                    <input type="text" id="candNome" placeholder="Nome do Aluno/Contato" required>
+                    <input type="email" id="candEmail" placeholder="E-mail do Gmail válido" required>
+                    <input type="text" id="candWhats" placeholder="WhatsApp (DDD + Número sem o 55)" required>
+                    <input type="text" id="candArea" placeholder="Área de Interesse (ex: Tecnologia)" required>
+                    <button type="submit" class="btn-busca" style="background: linear-gradient(135deg, #4f46e5, #3730a3);">Salvar Contato no Banco</button>
+                </form>
+            </div>
         </div>
 
         <div class="box">
@@ -46,8 +57,7 @@
             </div>
             <button onclick="carregarVagas()" class="btn-busca">Buscar Vagas</button>
             
-            <div id="listaVagas" style="margin-top: 20px;">
-                </div>
+            <div id="listaVagas" style="margin-top: 20px;"></div>
         </div>
     </div>
 
@@ -58,9 +68,8 @@
             </div>
             <button id="btn-minimizar">−</button>
         </div>
-        
         <div id="chat-mensagens">
-            <div class="msg msg-bot">Olá! Eu sou a IA de suporte. Digite 'Oi' para iniciarmos.</div>
+            <div class="msg msg-bot">Olá! Eu sou o assistente integrado. Digite 'Oi' ou pergunte sobre as 'vagas' do banco.</div>
         </div>
         <div id="chat-input-area">
             <input type="text" id="chatInput" placeholder="Sua mensagem...">
@@ -78,38 +87,31 @@
             if (area) url += `area=${area}&`;
             if (modalidade) url += `modalidade=${modalidade}`;
 
-            try {
-                const resposta = await fetch(url);
-                const vagas = await resposta.json();
-                const divLista = document.getElementById('listaVagas');
-                divLista.innerHTML = '';
+            const resposta = await fetch(url);
+            const vagas = await resposta.json();
+            const divLista = document.getElementById('listaVagas');
+            divLista.innerHTML = '';
 
-                if (vagas.length === 0) {
-                    divLista.innerHTML = '<p style="text-align: center; color: #94a3b8;">Nenhuma vaga encontrada para este filtro.</p>';
-                    return;
-                }
-
-                vagas.forEach(vaga => {
-                    divLista.innerHTML += `
-                        <div class="vaga-card">
-                            <h3>${vaga.titulo}</h3>
-                            <p>
-                                <span class="badge">${vaga.area}</span> 
-                                <span class="badge">${vaga.modalidade}</span>
-                            </p>
-                            <p style="color: #10b981; font-weight: 600; margin-top: 10px;">R$ ${vaga.salario}</p>
-                            <p style="margin: 10px 0; line-height: 1.5;">${vaga.descricao}</p>
-                            
-                            <div class="actions-group">
-                                <button onclick="dispararRPA('${vaga._id}')" class="btn-rpa">Disparar RPA</button>
-                                <button onclick="deletarVaga('${vaga._id}')" class="btn-excluir">Apagar</button>
-                            </div>
-                        </div>
-                    `;
-                });
-            } catch (erro) {
-                console.error("Erro na busca:", erro);
+            if (vagas.length === 0) {
+                divLista.innerHTML = '<p style="text-align: center; color: #94a3b8;">Nenhuma vaga encontrada.</p>';
+                return;
             }
+
+            vagas.forEach(vaga => {
+                divLista.innerHTML += `
+                    <div class="vaga-card">
+                        <h3>${vaga.titulo}</h3>
+                        <p><span class="badge">${vaga.area}</span> <span class="badge">${vaga.modalidade}</span></p>
+                        <p style="color: #10b981; font-weight: 600; margin-top: 10px;">R$ ${vaga.salario}</p>
+                        <p style="margin: 10px 0;">${vaga.descricao}</p>
+                        <div class="actions-group">
+                            <button onclick="dispararRPA('${vaga._id}')" class="btn-rpa">Disparar RPA</button>
+                            <button onclick="editarSalario('${vaga._id}', '${vaga.salario}')" style="background: #64748b;">Editar Salário</button>
+                            <button onclick="deletarVaga('${vaga._id}')" class="btn-excluir">Apagar</button>
+                        </div>
+                    </div>
+                `;
+            });
         }
 
         document.getElementById('formVaga').addEventListener('submit', async function(e) {
@@ -121,31 +123,65 @@
                 salario: document.getElementById('salario').value,
                 modalidade: document.getElementById('modalidade').value
             };
-            const resposta = await fetch(`${API_URL}/vagas`, {
+            await fetch(`${API_URL}/vagas`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(novaVaga)
             });
-            if (resposta.ok) {
-                document.getElementById('formVaga').reset();
-                carregarVagas();
+            document.getElementById('formVaga').reset();
+            carregarVagas();
+        });
+
+        document.getElementById('formCandidato').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const novoCandidato = {
+                nome: document.getElementById('candNome').value,
+                email: document.getElementById('candEmail').value,
+                whatsapp: document.getElementById('candWhats').value,
+                area_interesse: document.getElementById('candArea').value
+            };
+            const resposta = await fetch(`${API_URL}/candidatos`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(novoCandidato)
+            });
+            if(resposta.ok) {
+                alert("Contato de teste salvo no MongoDB com sucesso! O robô lerá os dados daqui.");
+                document.getElementById('formCandidato').reset();
             }
         });
+
+        async function editarSalario(id, salarioAtual) {
+            const novoSalario = prompt("Digite o novo salário para esta vaga:", salarioAtual);
+            if (novoSalario === null || novoSalario.trim() === "") return;
+
+            const resposta = await fetch(`${API_URL}/vagas/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ salario: novoSalario })
+            });
+
+            if (resposta.ok) {
+                alert("Salário atualizado via requisição PUT com sucesso!");
+                carregarVagas();
+            }
+        }
+
         async function deletarVaga(id) {
-            if(confirm("Deseja apagar permanentemente essa vaga?")) {
+            if(confirm("Deseja apagar essa vaga?")) {
                 await fetch(`${API_URL}/vagas/${id}`, { method: 'DELETE' });
                 carregarVagas();
             }
         }
 
         async function dispararRPA(id) {
-            alert("O robô Python foi acionado! Não mexa no mouse ou teclado.\nAguarde o processamento do Firefox e do Gmail...");
+            alert("O robô foi acionado! Buscando destinatário no banco...");
             try {
                 const resposta = await fetch(`${API_URL}/notificar/${id}`, { method: 'POST' });
-                const resultado = await resposta.json();
-                alert(`✅ Resultado do RPA:\nWhatsApp: ${resultado.whatsapp}\nGmail: ${resultado.email}\nLog Salvo: ${resultado.log_salvo_no_banco}`);
+                const resultado = await response.json();
+                alert(`Resultado:\nWhatsApp: ${resultado.whatsapp}\nGmail: ${resultado.email}`);
             } catch (erro) {
-                alert("❌ Erro de conexão ao tentar acionar o robô.");
+                console.log("Processando em background...");
             }
         }
 
@@ -159,42 +195,31 @@
             input.value = '';
             divMensagens.scrollTop = divMensagens.scrollHeight;
 
-            try {
-                const resposta = await fetch(`${API_URL}/chatbot`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ mensagem: texto })
-                });
-                const dados = await resposta.json();
-                
-                setTimeout(() => {
-                    divMensagens.innerHTML += `<div class="msg msg-bot">${dados.resposta}</div>`;
-                    divMensagens.scrollTop = divMensagens.scrollHeight;
-                }, 600);
-            } catch (erro) {
-                divMensagens.innerHTML += `<div class="msg msg-bot" style="color: red;">Erro ao conectar com a IA.</div>`;
-            }
+            const resposta = await fetch(`${API_URL}/chatbot`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mensagem: texto })
+            });
+            const dados = await resposta.json();
+            
+            setTimeout(() => {
+                divMensagens.innerHTML += `<div class="msg msg-bot">${dados.resposta}</div>`;
+                divMensagens.scrollTop = divMensagens.scrollHeight;
+            }, 500);
         }
-
-        document.getElementById('chatInput').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                enviarMensagemChat();
-            }
-        });
-
-        carregarVagas();
 
         function toggleChat() {
             const chatContainer = document.getElementById('chat-container');
             const btnMinimizar = document.getElementById('btn-minimizar');
             chatContainer.classList.toggle('chat-minimizado');
-            if (chatContainer.classList.contains('chat-minimizado')) {
-                btnMinimizar.innerText = '+';
-            } else {
-                btnMinimizar.innerText = '−';
-            }
+            btnMinimizar.innerText = chatContainer.classList.contains('chat-minimizado') ? '+' : '−';
         }
 
+        document.getElementById('chatInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') enviarMensagemChat();
+        });
+
+        carregarVagas();
     </script>
 </body>
 </html>
